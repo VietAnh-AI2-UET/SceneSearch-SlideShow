@@ -1,0 +1,173 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SceneSearch | Tìm kiếm ngữ nghĩa trong dữ liệu lái</title><style>/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES
+   Include this ENTIRE file in every presentation.
+   Slides are authored at 1920×1080 and scaled as a whole.
+   =========================================== */
+
+/* 1. Lock the browser viewport */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+
+/* 2. Full-window deck viewport */
+.deck-viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+
+/* 3. Fixed 16:9 design canvas.
+   JavaScript sets transform: translate(...) scale(...). */
+.deck-stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: var(--slide-bg, #fff);
+}
+
+/* 4. Slides stack inside the fixed stage.
+   Content must be laid out at 1920×1080, not reflowed per device. */
+.slide {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--slide-bg, #fff);
+}
+
+.slide.active,
+.slide.visible {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+}
+
+/* 5. Keep media inside authored slide bounds */
+img,
+video,
+canvas,
+svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* 6. Presentation chrome stays outside the slide design system */
+.deck-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+/* 7. Print one fixed-size slide per page */
+@media print {
+    html,
+    body {
+        width: 1920px;
+        height: auto;
+        overflow: visible;
+        background: #fff;
+    }
+
+    .deck-viewport {
+        position: static;
+        overflow: visible;
+        background: #fff;
+    }
+
+    .deck-stage {
+        position: static;
+        width: auto;
+        height: auto;
+        transform: none !important;
+        background: none;
+    }
+
+    .slide {
+        position: relative;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        width: 1920px;
+        height: 1080px;
+        break-after: page;
+        page-break-after: always;
+    }
+
+    .slide:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+
+    .deck-controls {
+        display: none !important;
+    }
+}
+
+/* 8. Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+}
+
+/* === THEME AND TYPOGRAPHY === */
+:root{--stage-bg:#050b13;--slide-bg:#101e2b;--ink:#f1f5f5;--muted:#afc3cf;--teal:#55d6cc;--orange:#ffad70}*{box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;color:var(--ink)}.slide{padding:72px 96px}.eyebrow{color:var(--teal);font-size:25px;font-weight:700;letter-spacing:4px;margin-bottom:25px}h2{font-size:66px;line-height:1.16;margin:0 0 38px;font-weight:650;letter-spacing:-1.5px}p{font-size:32px;line-height:1.45;margin:0 0 24px}b{font-weight:650}em{font-style:normal;color:var(--teal)}.small,small{font-size:27px;line-height:1.4;color:var(--muted)}.muted{color:var(--muted)}.label{font-size:25px;letter-spacing:2px;color:var(--teal);font-weight:650}.lead{font-size:34px}.accent{color:var(--orange)}footer{position:absolute;left:96px;right:96px;bottom:46px;border-top:1px solid #344654;padding-top:18px;font-size:23px;color:var(--muted);display:flex;justify-content:space-between}.takeaway{font-size:33px;color:var(--teal);margin-top:42px}.assumption{color:var(--orange);font-size:25px;letter-spacing:2px;margin-bottom:24px}
+/* === COVER === */
+.cover{background:radial-gradient(ellipse at 90% 40%,#183d49 0,transparent 57%),var(--slide-bg)}.cover h2{font-size:150px;letter-spacing:-7px;margin-top:100px;margin-bottom:25px}.subtitle{font-size:47px;color:var(--muted)}.coverline{height:5px;width:130px;background:var(--orange);margin:42px 0}.promise{font-size:48px}.coverlabel{position:absolute;right:100px;bottom:155px;font-size:26px;letter-spacing:5px;color:var(--muted)}
+/* === FLOW DIAGRAMS AND QUANTITIES === */
+.flow{display:flex;align-items:center;gap:16px;margin:30px 0}.node{flex:1;border-top:3px solid var(--teal);padding:24px 16px;background:#172c3b;font-size:31px;line-height:1.4;min-height:120px}.arrow{color:var(--teal);font-size:40px}.return .arrow{font-size:0}.return .arrow:after{content:'←';font-size:40px}.facts{display:flex;gap:130px;margin:30px 0}.facts strong{font-size:82px;line-height:1.1;font-weight:650}.facts strong span{font-size:31px;margin-left:20px;color:var(--muted)}.facts p{font-size:28px;margin-top:12px}.ratio{height:28px;background:#415563;margin:35px 0 20px}.ratio div{width:93.567%;height:100%;background:var(--orange)}.ratiolegend{display:flex;justify-content:space-between;font-size:31px}
+/* === SCREENSHOTS === */
+.querylayout{display:grid;grid-template-columns:470px 1fr;gap:60px;margin-top:38px}.quote{font-size:64px;line-height:1.25;font-weight:600;margin:32px 0}.querycrop{height:558px;overflow:hidden;position:relative;background:#f5f7fb}.querycrop img{position:absolute;width:1710px;max-width:none;max-height:none;left:-427px;top:-512px}.resultlayout{display:grid;grid-template-columns:1100px 560px;gap:68px;margin-top:70px}.clip{position:relative;width:1100px;margin-top:56px}.clip img{width:100%;display:block}.mark{position:absolute;font-size:26px;background:#ffad70;color:#142331;padding:10px 16px}.face{right:65px;top:-44px}.plate{left:75px;bottom:-44px}.caption{margin-top:60px;color:var(--teal)}.metacrop{height:416px;position:relative;overflow:hidden;background:#f5f7fb;margin-bottom:24px}.metacrop img{width:560px;position:absolute;max-height:none;top:-502px}.exportlayout{display:grid;grid-template-columns:770px 1fr;gap:100px;margin-top:40px}.savecrop{height:545px;overflow:hidden;position:relative}.savecrop img{position:absolute;width:2076px;max-width:none;max-height:none;left:-535px;top:-160px}.exports>div{display:flex;gap:35px;border-bottom:1px solid #344654;margin-bottom:26px;padding-bottom:14px}.exports b{font-size:48px;color:var(--teal);width:160px}.exports p{font-size:31px}
+/* === ARCHITECTURE AND INDEXING === */
+.arch{margin-top:60px}.arch .flow{gap:30px}.archlink{font-size:28px;color:var(--muted);margin:15px 0 15px 470px;display:flex;justify-content:space-between}.arch .return{margin-left:0;margin-right:450px}.storage{display:flex;gap:100px;margin-top:65px;border-top:1px solid #344654;padding-top:30px}.storage b{color:var(--teal);font-size:32px}.storage p{margin-top:14px}.indexdiagram{display:flex;align-items:center;gap:28px;margin:65px 0}.origin{flex:0 0 270px}.branches{flex:1}.branch{display:flex;align-items:center;gap:20px;margin-bottom:35px}.branch .node:last-child{flex:1.4}.evidence{display:flex;gap:0;border-top:1px solid #344654;padding-top:35px}.evidence>div{flex:1}.evidence b{color:var(--teal);font-size:34px}.evidence p{font-size:28px;margin-top:13px}.queryflow{margin-top:55px}.queryflow .flow{margin:0}.queryflow .down{text-align:right;padding-right:240px;font-size:48px;color:var(--teal);height:70px}.modes{display:grid;grid-template-columns:450px 1fr;gap:70px;margin-top:70px;border-top:1px solid #344654;padding-top:32px}.modes b{font-size:38px;color:var(--teal)}.modes p:not(.label){font-size:29px;margin-top:10px}.modepair{display:flex;gap:70px}
+/* === EDITABLE BENCHMARK TABLES === */
+.bench{display:grid;grid-template-columns:1fr 1fr;column-gap:75px;row-gap:30px;margin-top:35px}.bench h3{font-size:33px;color:var(--teal);margin:0 0 16px}.bench table{border-collapse:collapse;width:100%;font-size:28px}.bench th{text-align:left;font-weight:400;width:43%}.bench td,.bench th{height:64px;border-bottom:1px solid #415563;padding:8px 0}.benchmark-value{width:32%}.unit{font-size:23px;color:var(--muted);width:25%;padding-left:12px!important}.bench+.takeaway{font-size:31px;margin-top:38px}
+/* === NAVIGATION AND EDITING === */
+.deck-controls{display:flex;align-items:center;gap:12px;bottom:8px;background:#07111de8;padding:6px 12px;border-radius:8px;font-size:13px;color:#d9e5ec}.deck-controls button{border:0;background:transparent;color:#d9e5ec;font-size:16px;cursor:pointer;padding:4px 10px}.deck-controls button:focus-visible{outline:2px solid var(--teal)}[contenteditable=true]{outline:1px dashed var(--teal);min-width:30px}.slide{transition:opacity .18s ease}@media(prefers-reduced-motion:reduce){.slide{transition:none}}@media print{@page{size:1920px 1080px;margin:0}}
+/* === FINAL FIT ADJUSTMENTS === */
+.indexdiagram{margin:35px 0 30px}.evidence{padding-top:26px}.indexdiagram+.evidence+.takeaway{margin-top:24px}.bench td,.bench th{height:53px}.bench{row-gap:23px}.bench+.takeaway{margin-top:28px}.arch .return{margin:0}.archconnector{width:100%;height:115px;display:block}.arch .flow{margin:20px 0}.storage{margin-top:40px}.savecrop{width:620px}.metacrop{height:370px}.metacrop img{top:-545px}.resultlayout .small{font-size:29px}
+
+/* === REFERENCE STYLE: PAPER, HEAVY TYPE, HARD EDGES === */
+:root{--stage-bg:#dedbd3;--slide-bg:#faf9f5;--ink:#111110;--muted:#57564f;--teal:#2348ed;--orange:#bb302b;--pink:#efd3cf;--green:#e4ebd4}
+body{font-family:'Segoe UI',sans-serif}.slide{padding-top:88px}.eyebrow{font-family:Consolas,monospace;font-size:22px;letter-spacing:2px;color:#65645c;margin-bottom:18px}h2{font-weight:900;letter-spacing:-2px;font-size:66px;line-height:1.12;text-transform:uppercase;margin-bottom:30px}b{font-weight:800}.muted,.small,small{color:var(--muted)}em{color:var(--teal)}footer{border-color:#111110;color:#64635b;padding-top:15px;bottom:38px;font-family:Consolas,monospace;font-size:21px}.lead{font-size:33px}.label{font-weight:800;color:#111110;font-size:25px}.assumption{background:var(--pink);color:#111110;display:table;padding:7px 13px;font-size:23px;font-weight:750;margin-bottom:20px}.takeaway{color:#111110;font-weight:650}.accent{color:#111110;background:var(--pink);padding:0 6px}
+/* === CHAPTER STRIP === */
+.chapter-nav{position:absolute;left:0;right:0;top:0;height:62px;display:flex;border-bottom:3px solid #111110;z-index:20;background:#faf9f5}.chapter-nav button{flex:1;border:0;border-right:3px solid #111110;background:transparent;color:#111110;font-family:inherit;font-size:20px;font-weight:850;text-transform:uppercase;cursor:pointer}.chapter-nav button:last-child{border-right:0}.chapter-nav button.current{background:var(--pink)}.chapter-nav button span{color:#77766c;margin-right:12px}.chapter-nav button:focus-visible{outline:4px solid var(--teal);outline-offset:-6px}
+/* === COVER TYPOGRAPHY === */
+.cover{background:#f3f0e7}.cover:before{content:'';position:absolute;inset:79px 52px 102px;border:3px solid #111110;box-shadow:12px 12px 0 #111110;pointer-events:none}.cover .eyebrow{position:relative;margin-top:25px}.cover h2{position:relative;font-size:174px;font-weight:950;letter-spacing:-9px;margin-top:75px;line-height:1.06;text-transform:none;margin-bottom:24px}.cover .subtitle{position:relative;color:#111110;font-size:48px;line-height:1.3;font-weight:700;max-width:1400px}.cover .subtitle br{display:none}.coverline{background:var(--pink);height:15px;width:700px;margin:32px 0}.promise{font-size:43px;line-height:1.4}.promise em{font-weight:800}.coverlabel{bottom:151px;color:#111110;font-size:23px}.cover footer{border-top:0}
+/* === EDITABLE DIAGRAMS === */
+.flow{gap:16px}.node{border:2px solid #111110;border-top:2px solid #111110;background:var(--green);box-shadow:5px 5px 0 #111110;font-weight:650;padding:22px 16px}.flow .node:nth-of-type(even){background:var(--pink)}.arrow,.queryflow .down{color:#111110}.node small{color:#45463c;font-weight:400}.facts{margin:26px 0;gap:130px}.facts strong{font-size:88px;font-weight:900;letter-spacing:-3px}.facts strong span{font-weight:500;letter-spacing:0}.ratio{border:2px solid #111110;background:var(--green);height:30px;margin-top:30px}.ratio div{background:var(--pink);border-right:2px solid #111110}.ratiolegend{font-size:29px}.ratiolegend .accent{background:none}.ratiolegend b{font-weight:900}.ratiolegend+.takeaway{margin-top:34px}.quote{font-weight:900;letter-spacing:-2px}.querycrop,.clip,.metacrop,.savecrop{border:2px solid #111110;box-shadow:8px 8px 0 #111110}.mark{background:var(--pink);color:#111110;border:2px solid #111110;font-weight:700}.caption{color:#111110;font-weight:750}.resultlayout{margin-top:56px}.exports>div{border-color:#111110}.exports b{color:#111110;font-weight:900}.exports>div:nth-child(1) b{background:var(--pink);height:68px;padding-left:10px}.exports>div:nth-child(2) b{background:var(--green);height:68px;padding-left:10px}.storage{border-color:#111110}.storage b,.evidence b,.modes b{color:#111110;font-weight:850}.evidence{border-color:#111110}.evidence>div{border-right:2px solid #111110;padding:15px 22px;background:var(--green)}.evidence>div:nth-child(even){background:var(--pink)}.evidence>div:last-child{border-right:0}.evidence p{margin-bottom:0}.indexdiagram+.evidence+.takeaway{margin-top:25px;font-size:31px}.modes{border-color:#111110}.modes .label{font-size:23px}.modes b{background:var(--green);padding:3px 8px}.modepair>div:last-child b{background:var(--pink)}.bench h3{color:#111110;font-weight:850;border-bottom:3px solid #111110;padding:8px 12px;background:var(--green);font-size:31px}.bench>div:nth-child(even) h3{background:var(--pink)}.bench td,.bench th{border-color:#a5a398;height:50px}.bench{row-gap:21px}.bench+.takeaway{font-size:30px}.unit{color:#636158}.archconnector path{stroke:#111110}.archconnector text{fill:#57564f}.deck-controls{background:#111110;color:#fff;border:1px solid #111110;border-radius:0;box-shadow:3px 3px 0 #888;bottom:7px}.deck-controls button{color:#fff}.deck-controls button:hover{background:#444}.querylayout{margin-top:32px}.exportlayout{margin-top:35px}
+@media print{.chapter-nav{display:none}}
+.cover h2{display:table;background:var(--pink);padding:0 18px 12px;margin-left:-18px}.coverline{background:#2348ed;height:6px;width:120px}.slide{transition:none}/* === CLOSING SLIDE === */.closing h2{font-size:146px;line-height:1.12;letter-spacing:-5px;margin-top:108px;padding:8px 22px 22px}.closing-note{font-size:39px;margin-top:48px}.closing .coverlabel{font-size:23px}</style></head><body><div class="deck-viewport"><main class="deck-stage"><nav class="chapter-nav" aria-label="Mục trình bày"><button data-slide="0"><span>00</span>Giới thiệu</button><button data-slide="1"><span>01</span>Bài toán</button><button data-slide="2"><span>02</span>Cách sử dụng</button><button data-slide="5"><span>03</span>Kiến trúc</button><button data-slide="6"><span>04</span>Luồng xử lý</button><button data-slide="8"><span>05</span>Đánh giá</button><button data-slide="9"><span>06</span>Cảm ơn</button></nav><section class="slide cover" aria-label="Slide 1: SceneSearch"><div class="eyebrow">SCENESEARCH / TÌM KIẾM NGỮ NGHĨA</div><h2>SceneSearch</h2><p class="subtitle">Công cụ tìm kiếm ngữ nghĩa <br>trong dữ liệu lái</p><div class="coverline"></div><p class="promise">Mô tả cảnh cần tìm.<br><em>Xem và duyệt clip phù hợp.</em></p><div class="coverlabel">VIDEO → QUERY → CLIP</div><footer>SceneSearch<span>01 / 10</span></footer></section><section class="slide " aria-label="Slide 2: Nút thắt nằm ở khâu duyệt video"><div class="eyebrow">SCENESEARCH / BÀI TOÁN</div><h2>Nút thắt nằm ở khâu duyệt video</h2><p class="assumption">TÌNH HUỐNG GIẢ ĐỊNH ĐỂ MINH HỌA</p><p class="lead">Cần <b>1.000 clip “xe máy tạt đầu”</b> cho training AEB / Trajectory Prediction</p><div class="facts"><div><strong>2.000<span>giờ video</span></strong><p>Giả định 2 giờ lái / cảnh</p></div><div><strong>1–3<span>giây / cảnh</span></strong><p>Dữ liệu lớn · Cảnh hiếm · Diễn biến nhanh</p></div></div><div class="flow"><div class="node">Tiếp nhận<br><b>~2h</b></div><span class="arrow">→</span><div class="node">Lọc metadata<br><b>~6h</b></div><span class="arrow">→</span><div class="node">Duyệt thủ công<br><b class="accent">~960h</b></div><span class="arrow">→</span><div class="node">Cắt / trích xuất<br><b>~50h</b></div><span class="arrow">→</span><div class="node">Đóng gói<br><b>~8h</b></div></div><div class="ratio"><div></div></div><div class="ratiolegend"><b class="accent">960 giờ công = 93,6%</b><span>Tổng 1.026 giờ công ≈ 128 ngày công</span></div><p class="takeaway">Tìm ứng viên bằng mô tả, để con người tập trung vào duyệt kết quả.</p><footer>SceneSearch<span>02 / 10</span></footer></section><section class="slide " aria-label="Slide 3: Từ video đến câu truy vấn"><div class="eyebrow">SCENESEARCH / SỬ DỤNG</div><h2>Từ video đến câu truy vấn</h2><div class="flow"><div class="node">Upload video</div><span class="arrow">→</span><div class="node">Chờ indexing xong</div><span class="arrow">→</span><div class="node">Nhập mô tả</div><span class="arrow">→</span><div class="node">Lọc source / time</div></div><div class="querylayout"><div><p class="label">CẢNH CẦN TÌM</p><p class="quote">“xe máy<br>tạt đầu”</p><p class="muted">Lọc theo mốc thời gian<br>trong video gốc.</p><p class="small">Ảnh demo bên phải dùng query English.</p></div><div class="querycrop"><img src="assets/image-1.png" alt="Màn hình tìm kiếm thật với query English và bộ lọc video nguồn, thời gian"></div></div><footer>SceneSearch<span>03 / 10</span></footer></section><section class="slide " aria-label="Slide 4: Xem cảnh, kiểm tra mốc thời gian"><div class="eyebrow">SCENESEARCH / KẾT QUẢ</div><h2>Xem cảnh, kiểm tra mốc thời gian</h2><div class="resultlayout"><div><div class="clip"><img src="assets/image-3.png" alt="Clip demo với mặt người và biển số đã pixelate"><span class="mark face">Mặt đã làm mờ</span><span class="mark plate">Biển số đã làm mờ</span></div><p class="caption">Clip xem trước đã qua xử lý privacy</p><p class="muted">Kết quả theo thứ tự xếp hạng.<br>Người dùng kiểm tra nội dung từng clip.</p></div><div><p class="label">METADATA CỦA SAMPLE</p><div class="metacrop"><img src="assets/image-4.png" alt="Metadata thật gồm video, thời gian bắt đầu và kết thúc, bộ video và điểm tương đồng"></div><p class="small">Score là điểm tương đồng,<br>không phải xác suất đúng.</p></div></div><footer>SceneSearch<span>04 / 10</span></footer></section><section class="slide " aria-label="Slide 5: Người dùng quyết định clip phù hợp"><div class="eyebrow">SCENESEARCH / HUMAN IN THE LOOP</div><h2>Người dùng quyết định clip phù hợp</h2><div class="flow"><div class="node">Xem ứng viên</div><span class="arrow">→</span><div class="node">Đánh dấu phù hợp</div><span class="arrow">→</span><div class="node">Xem lại “Đã lưu”</div><span class="arrow">→</span><div class="node">Tải kết quả</div></div><div class="exportlayout"><div class="savecrop"><img src="assets/image-2.png" alt="Danh sách kết quả thật có nút Lưu, Đã lưu và xem đoạn video"></div><div class="exports"><div><b>CSV</b><p>Kết quả tìm kiếm<br>Metadata, rank và score</p></div><div><b>MP4</b><p>Từng clip đã xử lý privacy</p></div><div><b>JSON</b><p>Danh sách đã lưu</p></div><p class="small">Đánh dấu và lịch sử chỉ giữ trong session.</p></div></div><footer>SceneSearch<span>05 / 10</span></footer></section><section class="slide " aria-label="Slide 6: Kiến trúc tổng quan"><div class="eyebrow">SCENESEARCH / HỆ THỐNG</div><h2>Kiến trúc tổng quan</h2><p class="lead">UI gửi video hoặc query qua API. Backend xử lý và trả kết quả.</p><div class="arch"><div class="flow"><div class="node">UI<br><small>Streamlit</small></div><span class="arrow">→</span><div class="node">API / backend<br><small>FastAPI</small></div><span class="arrow">→</span><div class="node">Xử lý video<br><small>+ embedding</small></div><span class="arrow">→</span><div class="node">Index<br><small>Filesystem</small></div></div><svg class="archconnector" viewBox="0 0 1728 115" aria-label="Backend gửi query đến retrieval, index cung cấp vectors và metadata"><path d="M620 0 V55 H1430 V105 M1530 0 V105" fill="none" stroke="#55d6cc" stroke-width="3"/><path d="M1422 95 L1430 107 L1438 95 M1522 95 L1530 107 L1538 95" fill="none" stroke="#55d6cc" stroke-width="3"/><text x="670" y="42" fill="#afc3cf" font-size="27">Query qua backend</text><text x="1570" y="40" fill="#afc3cf" font-size="25">Vectors</text><text x="1570" y="74" fill="#afc3cf" font-size="25">+ metadata</text></svg><div class="flow return"><div class="node">UI<br><small>Xem và duyệt</small></div><span class="arrow">→</span><div class="node">Clip + metadata</div><span class="arrow">→</span><div class="node">Retrieval / ranking</div></div></div><div class="storage"><div><b>SQLite</b><p>Upload records và trạng thái</p></div><div><b>Filesystem</b><p>Vectors, metadata, video và media playback</p></div></div><footer>SceneSearch<span>06 / 10</span></footer></section><section class="slide " aria-label="Slide 7: Embedding và indexing"><div class="eyebrow">SCENESEARCH / CHUẨN BỊ TRƯỚC KHI TÌM KIẾM</div><h2>Embedding và indexing</h2><p class="lead">Video được chia thành clip tối đa 5 giây.</p><div class="indexdiagram"><div class="node origin">Video<br>→ Chia clip</div><div class="branches"><div class="branch"><span class="arrow">→</span><div class="node">Raw clip</div><span class="arrow">→</span><div class="node">Privacy</div><span class="arrow">→</span><div class="node">Media đã làm mờ<br><small>Dùng cho playback</small></div></div><div class="branch"><span class="arrow">→</span><div class="node">Inference clip</div><span class="arrow">→</span><div class="node">Frames / tracks</div><span class="arrow">→</span><div class="node">EG2 encoder<br><small>GLOBAL + local vectors</small></div></div></div></div><div class="evidence"><div><b>GLOBAL</b><p>Toàn clip</p></div><div><b>FRAME</b><p>Từng khung hình</p></div><div><b>WINDOW</b><p>Đoạn thời gian</p></div><div><b>TUBE</b><p>Theo object track</p></div></div><p class="takeaway">Lưu vectors + metadata + media → kiểm tra index → publish</p><footer>SceneSearch<span>07 / 10</span></footer></section><section class="slide " aria-label="Slide 8: Query và xếp hạng"><div class="eyebrow">SCENESEARCH / TÌM TRÊN DỮ LIỆU ĐÃ CÓ INDEX</div><h2>Query và xếp hạng</h2><div class="queryflow"><div class="flow"><div class="node">Query + filters</div><span class="arrow">→</span><div class="node">Chọn source / time</div><span class="arrow">→</span><div class="node">Encode query<br><small>EG2</small></div></div><div class="down">↓</div><div class="flow return"><div class="node">Clip + metadata</div><span class="arrow">→</span><div class="node">Top-k</div><span class="arrow">→</span><div class="node">Cosine ranking<br><small>GLOBAL vectors</small></div></div></div><div class="modes"><div><p class="label">MẶC ĐỊNH</p><b>eg2_only</b><p>Giữ cosine ranking</p></div><div><p class="label">TÙY MODE · LOCAL EVIDENCE TRONG TOP-5</p><div class="modepair"><div><b>shadow</b><p>Đánh giá, giữ ranking</p></div><div><b>active</b><p>Có thể đổi vị trí theo engine</p></div></div></div></div><footer>SceneSearch<span>08 / 10</span></footer></section><section class="slide " aria-label="Slide 9: Hiệu suất"><div class="eyebrow">SCENESEARCH / ĐÁNH GIÁ</div><h2>Hiệu suất</h2><p class="assumption">CHƯA CÓ SỐ LIỆU BENCHMARK</p><div class="bench"><div><h3>Phần cứng CPU</h3><table><tbody><tr><th>Model CPU</th><td class="benchmark-value" data-field="Phần cứng CPU: Model CPU"></td><td class="unit"></td></tr><tr><th>Cores / threads</th><td class="benchmark-value" data-field="Phần cứng CPU: Cores / threads"></td><td class="unit">cores / threads</td></tr><tr><th>RAM</th><td class="benchmark-value" data-field="Phần cứng CPU: RAM"></td><td class="unit">GB</td></tr></tbody></table></div><div><h3>Chất lượng retrieval</h3><table><tbody><tr><th>Tên metric</th><td class="benchmark-value" data-field="Chất lượng retrieval: Tên metric"></td><td class="unit"></td></tr><tr><th>k</th><td class="benchmark-value" data-field="Chất lượng retrieval: k"></td><td class="unit"></td></tr><tr><th>Tập đánh giá</th><td class="benchmark-value" data-field="Chất lượng retrieval: Tập đánh giá"></td><td class="unit"></td></tr><tr><th>Giá trị</th><td class="benchmark-value" data-field="Chất lượng retrieval: Giá trị"></td><td class="unit">theo metric</td></tr></tbody></table></div><div><h3>Embedding / indexing</h3><table><tbody><tr><th>Video đầu vào</th><td class="benchmark-value" data-field="Embedding / indexing: Video đầu vào"></td><td class="unit">phút</td></tr><tr><th>Số clip</th><td class="benchmark-value" data-field="Embedding / indexing: Số clip"></td><td class="unit">clip</td></tr><tr><th>Thời gian xử lý</th><td class="benchmark-value" data-field="Embedding / indexing: Thời gian xử lý"></td><td class="unit">giây</td></tr></tbody></table></div><div><h3>Query</h3><table><tbody><tr><th>Kích thước index</th><td class="benchmark-value" data-field="Query: Kích thước index"></td><td class="unit">clip / vectors</td></tr><tr><th>Top-k</th><td class="benchmark-value" data-field="Query: Top-k"></td><td class="unit"></td></tr><tr><th>Thời gian phản hồi</th><td class="benchmark-value" data-field="Query: Thời gian phản hồi"></td><td class="unit">ms</td></tr></tbody></table></div></div><p class="takeaway">Rút ngắn khâu tìm cảnh thủ công, để con người tập trung vào lựa chọn.</p><footer>SceneSearch<span>09 / 10</span></footer></section><section class="slide cover closing" aria-label="Slide 10: Cảm ơn"><div class="eyebrow">SCENESEARCH / CẢM ƠN</div><h2>Cảm ơn bạn<br>đã theo dõi.</h2><p class="closing-note">Rất mong nhận được câu hỏi và góp ý.</p><div class="coverlabel">MÔ TẢ CẢNH. TÌM CLIP. BẠN QUYẾT ĐỊNH.</div><footer>SceneSearch<span>10 / 10</span></footer></section></main></div><nav class="deck-controls" aria-label="Điều khiển trình chiếu"><button id="prev" aria-label="Slide trước">←</button><span id="counter" aria-live="polite"></span><button id="next" aria-label="Slide sau">→</button><button id="full">Toàn màn hình</button><button id="edit">Sửa</button><button id="save">Lưu HTML</button><span id="status"></span></nav><script>
+/* === SLIDE CONTROLLER: fixed canvas, keyboard and touch === */
+class SlidePresentation{
+ constructor(){this.slides=[...document.querySelectorAll('.slide')];this.current=0;this.editing=false;this.scale();window.addEventListener('resize',()=>this.scale());this.show(Number(location.hash.slice(1))-1||0);window.addEventListener('hashchange',()=>this.show(Number(location.hash.slice(1))-1||0));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&this.editing){this.edit();return}if(this.editing){if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();this.save()}return}let key=e.key;if(['ArrowRight','ArrowDown',' ','PageDown','ArrowLeft','ArrowUp','PageUp','Home','End'].includes(key))e.preventDefault();if(['ArrowRight','ArrowDown',' ','PageDown'].includes(key))this.show(this.current+1);if(['ArrowLeft','ArrowUp','PageUp'].includes(key))this.show(this.current-1);if(key==='Home')this.show(0);if(key==='End')this.show(this.slides.length-1);if(key.toLowerCase()==='f')this.fullscreen();if(key.toLowerCase()==='e')this.edit()});let start=0;document.addEventListener('touchstart',e=>start=e.changedTouches[0].clientX,{passive:true});document.addEventListener('touchend',e=>{let d=e.changedTouches[0].clientX-start;if(!this.editing&&Math.abs(d)>50)this.show(this.current+(d<0?1:-1))},{passive:true});let last=0;document.addEventListener('wheel',e=>{if(!this.editing&&Date.now()-last>500&&Math.abs(e.deltaY)>20){this.show(this.current+Math.sign(e.deltaY));last=Date.now()}},{passive:true});}
+ scale(){let s=Math.min(innerWidth/1920,innerHeight/1080);document.querySelector('.deck-stage').style.transform=`translate(${(innerWidth-1920*s)/2}px,${(innerHeight-1080*s)/2}px) scale(${s})`}
+ show(i){this.current=Math.max(0,Math.min(i,this.slides.length-1));this.slides.forEach((s,n)=>{s.classList.toggle('active',n===this.current);s.setAttribute('aria-hidden',n!==this.current)});document.querySelector('#counter').textContent=`${this.current+1} / ${this.slides.length}`;history.replaceState(null,'','#'+(this.current+1));document.querySelectorAll('.chapter-nav button').forEach((b,n,all)=>{const start=Number(b.dataset.slide);const end=n+1<all.length?Number(all[n+1].dataset.slide):this.slides.length;b.classList.toggle('current',this.current>=start&&this.current<end)})}
+ async fullscreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch{document.querySelector('#status').textContent='Dùng F11 để toàn màn hình'}}
+ edit(){this.editing=!this.editing;document.querySelectorAll('h2,h3,p,.benchmark-value').forEach(el=>el.contentEditable=this.editing?'true':'false');document.querySelector('#status').textContent=this.editing?'Đang sửa · Esc để thoát · Ctrl+S để tải HTML':'';}
+ save(){const copy=document.documentElement.cloneNode(true);copy.querySelectorAll('[contenteditable]').forEach(e=>e.removeAttribute('contenteditable'));copy.querySelector('#status').textContent='';const blob=new Blob(['<!DOCTYPE html>\n'+copy.outerHTML],{type:'text/html;charset=utf-8'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='index.html';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+}
+const deck=new SlidePresentation();document.querySelectorAll(".chapter-nav button").forEach(b=>b.onclick=()=>deck.show(Number(b.dataset.slide)));document.querySelector('#prev').onclick=()=>deck.show(deck.current-1);document.querySelector('#next').onclick=()=>deck.show(deck.current+1);document.querySelector('#full').onclick=()=>deck.fullscreen();document.querySelector('#edit').onclick=()=>deck.edit();document.querySelector('#save').onclick=()=>deck.save();
+</script></body></html>
