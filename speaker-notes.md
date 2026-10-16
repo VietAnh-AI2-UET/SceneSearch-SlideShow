@@ -66,7 +66,7 @@ Có ba loại đầu ra cần phân biệt. CSV là bảng kết quả tìm ki�
 
 Có hai nơi lưu dữ liệu cần phân biệt. SQLite giữ upload records và trạng thái. Filesystem giữ vectors, metadata và media. Kiến trúc hiện tại không cần vẽ thêm một vector database hay dịch vụ cloud. Sơ đồ này gom các thành phần triển khai thành những khối dễ theo dõi.
 
-**Nhịp trình bày:** Theo hàng trên từ trái sang phải cho indexing. Theo mũi tên query và index xuống retrieval, rồi theo hàng dưới sang trái về UI.
+**Nhịp trình bày:** Đi từ trái qua phải: Streamlit và DemoClient qua HTTP đến FastAPI, rồi VideoLibrary điều phối. Chỉ hai lane A/B: indexing ghi bản published, search đọc bản này. Bên phải, SQLite chỉ chứa records/trạng thái; filesystem chứa vectors, JSON và media. Kết bằng thanh trả kết quả: JSON cùng thời gian nguồn, còn preview URL có token dùng để phát safe.mp4. Các mũi tên hai chiều biểu diễn cả đọc/ghi hoặc request/response; không phải mọi service đều ghi mọi kho dữ liệu.
 
 **Chuyển ý:** Đi sâu vào quá trình chuẩn bị dữ liệu trước khi tìm kiếm.
 
@@ -80,6 +80,8 @@ EG2 tạo GLOBAL vector đại diện toàn clip. Ngoài ra có local evidence: 
 
 **Chi tiết kỹ thuật nếu được hỏi:** Bản inference có thể được pad theo đầu vào model. GLOBAL dùng 5 RGB frames; local specs gồm 8 FRAME, 3 WINDOW dài 2 giây và tối đa 3 TUBE. Geometry dùng YOLO11n và ByteTrack. Encoder tạo vector 768 chiều, normalized, FP32. Slide giữ tên EG2 theo tài liệu, không bổ sung tên biến thể chưa cần thiết. GLOBAL lấy frames từ inference; local evidence lấy frames và tracks của nhánh geometry.
 
+**Nhịp trình bày:** Đi từ FFmpeg sang hai nhánh. Nhánh raw chạy phát hiện/theo dõi và pixelate, tạo safe.mp4 cùng poster để playback. Nhánh inference trích 5 RGB frames cho GLOBAL; geometry dùng YOLO11n + ByteTrack để chuẩn bị local specs. EG2 encode các đầu vào này thành vector 768 chiều, FP32, normalized. Chỉ bốn ô evidence, rồi kết ở staging → load_index → publish → SQLite ready. GLOBAL lấy trực tiếp từ frames inference; object tracks chỉ phục vụ local evidence.
+
 **Chuyển ý:** Khi index đã sẵn sàng, mỗi query đi qua một luồng riêng.
 
 **Nguồn:** `../ARCHITECTURE.md`, mục 2–4; `../demo/product_runtime.py`, `ProductEncoder`. Diagram là bản rút gọn của luồng chuẩn bị, không thể hiện privacy như đầu vào encoder.
@@ -90,7 +92,7 @@ EG2 tạo GLOBAL vector đại diện toàn clip. Ngoài ra có local evidence: 
 
 Mặc định eg2_only giữ ranking gốc. Nếu chọn shadow hoặc active, engine đánh giá local evidence trong EG2 Top-5. Shadow tính đánh giá nhưng vẫn giữ thứ tự EG2. Active có thể đưa một candidate trong Top-5 lên đầu theo quyết định của engine, giữ thứ tự tương đối của các candidate còn lại. Vì vậy reranking là nhánh tùy mode, không phải bước luôn chạy mặc định.
 
-**Nhịp trình bày:** Đi hàng trên sang phải, xuống cosine ranking, rồi theo hàng dưới sang trái tới kết quả. Sau đó giải thích nhánh tùy mode. Top-5 là phạm vi đánh giá local evidence; top-k là số kết quả được trả theo yêu cầu. Local evidence, khi bật, tham gia trước đầu ra cuối cùng.
+**Nhịp trình bày:** Theo năm bước từ trái sang phải: request, lọc corpus, encode query, cosine scores, ranking gốc. Thanh index phía trên mô tả hai nhóm dữ liệu có sẵn. Chọn một mode ở hàng dưới trước khi cắt top-k và trả metadata. Chỉ rõ shadow/active cùng chấm local_score và dùng decide trong EG2 Top-5; shadow chỉ ghi nhận đề xuất, active có thể đưa một candidate lên đầu. Top-5 và top-k có vai trò khác nhau. Query cache chỉ tiết kiệm bước encode khi đã có vector tương ứng.
 
 **Chi tiết:** Query dùng prompt `SearchQuery`. Engine có cache query vector, nên benchmark cần phân biệt warm và cold cache. Cosine score không phải accuracy.
 
