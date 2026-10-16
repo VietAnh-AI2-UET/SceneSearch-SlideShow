@@ -1,6 +1,6 @@
 # SceneSearch — Speaker notes
 
-Tổng thời lượng: **430 giây (khoảng 7 phút 10 giây)**. Thời lượng gồm lời nói, dừng để người xem đọc hình và chuyển ý. Screenshot là ảnh tĩnh, không phải video có thể phát trong slide.
+Tổng thời lượng: **465 giây (khoảng 7 phút 45 giây)**. Thời lượng gồm lời nói, dừng để người xem đọc hình và chuyển ý. Screenshot là ảnh tĩnh, không phải video có thể phát trong slide.
 
 ## 1. SceneSearch — 20 giây (00:00–00:20)
 
@@ -102,19 +102,35 @@ Mặc định eg2_only giữ ranking gốc. Nếu chọn shadow hoặc active, e
 
 ## 9. Hiệu suất cần đo — 50 giây (06:10–07:00)
 
-**Lời dẫn:** Hiện chưa có số liệu benchmark trong bộ slide. Bốn nhóm này là khung để bổ sung số đo thật. Đầu tiên ghi CPU, cores, threads và RAM. Tiếp theo chọn metric retrieval, k và tập đánh giá. Có thể chọn Precision@k hoặc Recall@k sau khi thống nhất ground truth và cách tính.
+**Lời dẫn:** Số liệu do người dùng cung cấp: video đầu vào 10 phút, thời gian xử lý 30 phút, top-k bằng 5, thời gian phản hồi 1.000 ms. Kích thước index trên slide tính theo giả định query dùng cùng bộ video 10 phút: 120 clip. Số clip là số đoạn sau khi cắt video nguồn để indexing; 10 phút chia thành clip 5 giây tương ứng khoảng 120 clip, đã điền 120 theo phép tính này, không phải số đếm từ index thực tế. Bốn nhóm này là khung để bổ sung số đo thật. Đầu tiên ghi CPU, cores, threads và RAM. Tiếp theo chọn metric retrieval, k và tập đánh giá. Có thể chọn Precision@k hoặc Recall@k sau khi thống nhất ground truth và cách tính.
 
 Với indexing, ghi thời lượng video, số clip và thời gian xử lý. Với query, ghi kích thước index, top-k và thời gian phản hồi. Hai giai đoạn phải đo riêng, vì query trên index có sẵn không bao gồm toàn bộ chi phí chuẩn bị video.
 
-**Điều kiện cần bổ sung:** Đo riêng encoder hay toàn pipeline; có tính upload, privacy, geometry, publish không; device thực chạy; số lần lặp và cách tổng hợp; warm/cold cache; mode eg2_only/shadow/active; thời gian backend hay end-to-end gồm UI. Giữ các ô giá trị rỗng cho tới khi có dữ liệu. Không lấy thời gian 1,03 giây trong screenshot làm benchmark đại diện.
+**Điều kiện cần bổ sung:** Đo riêng encoder hay toàn pipeline; có tính upload, privacy, geometry, publish không; device thực chạy; số lần lặp và cách tổng hợp; warm/cold cache; mode eg2_only/shadow/active; thời gian backend hay end-to-end gồm UI. Các ô chưa có dữ liệu tiếp tục để trống; kích thước index ghi 120 clip, theo giả định dùng cùng bộ video đầu vào. Không lấy thời gian 1,03 giây trong screenshot làm benchmark đại diện.
 
 **Câu kết:** SceneSearch hướng đến rút ngắn khâu tìm cảnh thủ công để con người tập trung vào lựa chọn dữ liệu phù hợp.
 
 **Nguồn:** `../dumb-scribings/presentation.md`, storyboard slide 9; `../ARCHITECTURE.md`, mục 4–5; `../demo/product_runtime.py`, lựa chọn device. Chưa chạy benchmark hoặc inference cho nhiệm vụ tạo slide này.
 
 
-## 10. Cảm ơn — 10 giây (07:00–07:10)
+## 10. Workflow với SceneSearch — 35 giây (07:00–07:35)
+
+**Lời dẫn:** Bắt đầu với chi phí chuẩn bị. Người dùng cung cấp embedding 3 phút video mất 9 phút, query 1 giây. Ngoại suy tuyến tính trên cùng cấu hình, xử lý tuần tự, 2.000 giờ video cần 6.000 giờ máy, tương đương 250 ngày chạy liên tục. Đây chỉ là embedding, chưa gồm upload, privacy, geometry và publish. Không coi giờ máy là giờ công; không suy ra tốc độ xử lý song song chưa đo.
+
+Sau khi index sẵn sàng, giữ giả định tiếp nhận và lọc metadata 8 giờ công. Theo cập nhật của người dùng, soạn một query và filters mất 5 giây, hệ thống phản hồi trong 1 giây theo số được cung cấp. Giả định trả và duyệt 2.000 ứng viên, mỗi ứng viên 10 giây gồm xem và quyết định, với 1.000 clip được xác nhận đúng: 20.000 giây = 5,56 giờ công. Đây là giả định về chất lượng ứng viên và thao tác, không phải Precision@k đã đo; một query có thể không tìm đủ 1.000 clip thực tế. Clip đã được hệ thống cắt sẵn trong giai đoạn chuẩn bị nên không cộng lại 50 giờ cắt/trích xuất thủ công. Giữ giả định 8 giờ đóng gói từ ví dụ cũ; thời gian tải clip phụ thuộc dung lượng và đường truyền, chưa được đo.
+
+**Phép tính:** 8 + 5/3600 + 2000×10/3600 + 8 = 21,557 giờ công ≈ 21,6 giờ công. 1 giây query là thời gian hệ thống riêng. So sánh khâu dò 960 giờ công với 5,6 giờ công duyệt ứng viên chỉ có giá trị theo giả định này. Ước lượng indexing áp dụng cho toàn dataset gốc, chưa tính giảm khối lượng nhờ lọc metadata vì chưa biết tỷ lệ giữ lại. Index có thể dùng lại cho truy vấn tiếp theo nếu dữ liệu không đổi.
+
+**Nguồn:** Tốc độ embedding/query do người dùng cung cấp; khối lượng và workflow cũ từ slide 2. Thời gian soạn query do người dùng cung cấp; thời gian duyệt là giả định để lập kế hoạch, chưa benchmark.
+
+## 11. Cảm ơn — 10 giây (07:35–07:45)
 
 **Lời dẫn:** Cảm ơn mọi người đã theo dõi. Tôi rất mong nhận được câu hỏi và góp ý về SceneSearch.
 
 **Nhịp trình bày:** Dừng ở slide này để kết thúc hoặc trao đổi với khán giả.
+
+
+**Cập nhật phần cứng slide 9:** Đọc trực tiếp bằng Windows CIM: Intel Core i5-12500H (12th Gen), 12 cores / 16 threads, RAM 16 GB. Đây là cấu hình máy hiện tại; chưa xác minh các số thời gian được cung cấp đã được đo trên chính cấu hình này.
+
+
+**Nguồn chất lượng retrieval slide 9:** `docs/embeddinggemma2.md`, mục Frozen evaluation and use, ghi EG2-B trên full200 (200 vectors, 63 positive queries): Top5=0.841270, MRR=0.630467. Điền Top5 (Hit@5), k=5, 84,13%. Đây là tỷ lệ query có ít nhất một clip liên quan trong 5 kết quả đầu, không phải Precision@5 hoặc tỷ lệ clip đúng trong Top-5. Tập full200 khác bộ video 10 phút / 120 clip đang minh họa indexing và query. Đây là số đánh giá lịch sử được ghi trong tài liệu repo, không phải benchmark vừa chạy; artifacts gốc không được phân phối cùng source theo tài liệu. Trong 45 positive queries không tham gia chọn cấu hình pilot, Top5=82,22%; không gọi 84,13% là kết quả heldout độc lập hoặc kết quả V6 active.
