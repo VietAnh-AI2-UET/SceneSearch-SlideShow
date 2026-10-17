@@ -54,3 +54,10 @@
 - Slide 7: bổ sung FFmpeg, privacy, inference, YOLO11n/ByteTrack, EG2, bốn loại evidence và staging → kiểm tra → publish → ready.
 - Slide 8: thể hiện năm bước query, nguồn index, ba nhánh mode và bước cắt top-k sau ranking theo mode.
 - Đã kiểm tra bản cập nhật trong Chrome headless ở 1280×720 và stage 16:9 tại viewport 390×844; không phát hiện tràn khung hoặc lỗi JavaScript ở slide 6–8. Đã xem ảnh render để chỉnh khoảng cách với footer. Nội dung kiến trúc đối chiếu ARCHITECTURE.md; không chạy inference hoặc benchmark.
+
+## Hiệu ứng trình chiếu
+
+- Chuyển slide bằng fade nhẹ; tiêu đề, nội dung và các bước sơ đồ tự lần lượt hiện lên khi mở slide. Không cần bấm thêm.
+- Hiệu ứng chạy lại khi quay về slide. Chế độ Sửa hiện ngay toàn bộ nội dung.
+- Tự tắt hiệu ứng khi hệ điều hành bật Reduce motion; bản in luôn hiện đầy đủ nội dung.
+- Hiệu ứng nằm trong HTML, dùng được offline và được giữ khi chọn Lưu HTML.
